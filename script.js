@@ -1,10 +1,7 @@
 // redesign UI
-// Maybe add a brush size
 // Maybe add zoom levels
 // Maybe add premade structures
 // Maybe add seed support
-// On reset save initial seed
-// On clear - clear everything
 
 $(document).ready(function () {
   const canvas = document.getElementById("myCanvas");
@@ -31,6 +28,7 @@ $(document).ready(function () {
   let hoverRow = -1;
   let hoverCol = -1;
   const maxSpeed = 1000;
+  let brushSize = 1;
 
   let isDragging = false;
   let isDeleting = false;
@@ -80,13 +78,36 @@ $(document).ready(function () {
     }
   }
 
-
   function addCell(row, col) {
+    drawCanvas();
     if (row >= 0 && row < numRows && col >= 0 && col < numCols) {
       cells[row][col] = 1;
       drawCanvas();
     }
   }
+
+  function brushedAddCell(row, col) {
+    for (let i = row; i < row + brushSize; i++) {
+      for (let j = col; j < col + brushSize; j++) {
+        if (i >= 0 && i < numRows && j >= 0 && j < numCols) {
+          cells[i][j] = 1;
+        }
+      }
+    }
+    drawCanvas();
+  }
+
+  function brushedDeleteCell(row, col) {
+    for (let i = row; i < row + brushSize; i++) {
+      for (let j = col; j < col + brushSize; j++) {
+        if (i >= 0 && i < numRows && j >= 0 && j < numCols) {
+          cells[i][j] = 0;
+        }
+      }
+    }
+    drawCanvas();
+  }
+
 
   function countLiveNeighbours(row, col) {
     let liveNeighbors = 0;
@@ -171,9 +192,17 @@ $(document).ready(function () {
         prevDragRow = currDragRow;
         prevDragCol = currDragCol;
         if (isDeleting) {
-          deleteCell(currDragRow, currDragCol);
+          if (brushSize > 1) {
+            brushedDeleteCell(currDragRow, currDragCol);
+          } else {
+            deleteCell(currDragRow, currDragCol);
+          }
         } else {
-          addCell(currDragRow, currDragCol);
+          if (brushSize > 1) {
+            brushedAddCell(currDragRow, currDragCol);
+          } else {
+            addCell(currDragRow, currDragCol);
+          }
         }
       }
     }
@@ -200,7 +229,7 @@ $(document).ready(function () {
     }
   });
 
-  document.addEventListener("keyup", function(event) {
+  document.addEventListener("keyup", function (event) {
     if (event.key === "x") {
       isDeleting = false;
     }
@@ -238,6 +267,27 @@ $(document).ready(function () {
       clearInterval(interval);
       interval = setInterval(nextIteration, getSpeed());
     }
+  });
+
+  $("#brushDecrementButton").on("click", function () {
+    let newBrushSize = brushSize / 2;
+
+    if (newBrushSize < 1) {
+      return;
+    }
+    $("#brushSizeLabel").text(newBrushSize);
+    brushSize = newBrushSize;
+  });
+
+  $("#brushIncrementButton").on("click", function () {
+    let newBrushSize = brushSize * 2;
+
+    if (newBrushSize > 16) {
+      return;
+    }
+
+    $("#brushSizeLabel").text(newBrushSize);
+    brushSize = newBrushSize;
   });
 
   drawCanvas();

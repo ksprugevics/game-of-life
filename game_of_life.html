@@ -1,29 +1,38 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <script src="https://code.jquery.com/jquery-3.6.4.slim.min.js" integrity="sha256-a2yjHM4jnF9f54xUQakjZGaqYs/V1CYvWpoqZzC2/Bw=" crossorigin="anonymous"></script>
-  <title>Game of life</title>
-  <link rel="stylesheet" href="style.css">
-</head>
-<body>
-  <header>
-    <h1>Game of life</h1>
-  </header>
-  <main>
-    <canvas id="myCanvas"></canvas>
-  </main>
-  <footer>
-    <div id="controls">
-      <button id="toggleButton">Start!</button>
-      <button id="nextButton">Next Iteration</button>
-      <button id="resetButton">Reset</button>
-      <button id="clearButton">Clear</button>
-      <input type="range" id="speedSlider" min="200" max="1000" value="500">
-    </div>
-    <p>&copy; 2023 Hi.</p>
-  </footer>
-  <script src="script.js"></script>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script
+      src="https://code.jquery.com/jquery-3.6.4.slim.min.js"
+      integrity="sha256-a2yjHM4jnF9f54xUQakjZGaqYs/V1CYvWpoqZzC2/Bw="
+      crossorigin="anonymous"
+    ></script>
+    <title>Game of life</title>
+    <link rel="stylesheet" href="style.css" />
+  </head>
+  <body>
+    <header>
+      <h1>Game of life</h1>
+    </header>
+    <main>
+      <canvas id="myCanvas"></canvas>
+    </main>
+    <footer>
+      <div id="controls">
+        <button id="toggleButton">Start!</button>
+        <button id="nextButton">Next Iteration</button>
+        <button id="resetButton">Reset</button>
+        <button id="clearButton">Clear</button>
+        <input type="range" id="speedSlider" min="200" max="1000" value="500" />
+        <div id="brushSizeContainer">
+          <button id="brushDecrementButton">-</button>
+          <span id="brushSizeLabel">1</span>
+          <button id="brushIncrementButton">+</button>
+        </div>
+      </div>
+      <p>&copy; 2023 Hi.</p>
+    </footer>
+    <script src="script.js"></script>
+  </body>
 </html>

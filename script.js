@@ -3,6 +3,9 @@
 // Maybe add zoom levels
 // Maybe add premade structures
 // Maybe add seed support
+// On reset save initial seed
+// On clear - clear everything
+
 $(document).ready(function () {
   const canvas = document.getElementById("myCanvas");
   const context = canvas.getContext("2d");
@@ -28,6 +31,7 @@ $(document).ready(function () {
   const maxSpeed = 1000;
 
   let isDragging = false;
+  let isDeleting = false;
   let prevDragRow = -1;
   let prevDragCol = -1;
 
@@ -60,17 +64,28 @@ $(document).ready(function () {
     }
   }
 
-  function toggleCell(row, col, forcedLive) {
+  function toggleCell(row, col) {
     if (row >= 0 && row < numRows && col >= 0 && col < numCols) {
-      if (forcedLive) {
-        cells[row][col] = 1;
-      } else {
-        cells[row][col] = cells[row][col] === 0 ? 1 : 0;
-      }
+      cells[row][col] = cells[row][col] === 0 ? 1 : 0;
       drawCanvas();
     }
   }
-  
+
+  function deleteCell(row, col) {
+    if (row >= 0 && row < numRows && col >= 0 && col < numCols) {
+      cells[row][col] = 0;
+      drawCanvas();
+    }
+  }
+
+
+  function addCell(row, col) {
+    if (row >= 0 && row < numRows && col >= 0 && col < numCols) {
+      cells[row][col] = 1;
+      drawCanvas();
+    }
+  }
+
   function countLiveNeighbours(row, col) {
     let liveNeighbors = 0;
 
@@ -133,7 +148,7 @@ $(document).ready(function () {
     const clickedCol = Math.floor(mouseX / cellSize);
     const clickedRow = Math.floor(mouseY / cellSize);
 
-    toggleCell(clickedRow, clickedCol, false);
+    toggleCell(clickedRow, clickedCol);
   });
 
   canvas.addEventListener("mousemove", function (event) {
@@ -148,7 +163,11 @@ $(document).ready(function () {
       if (currDragRow !== prevDragRow || currDragCol !== prevDragCol) {
         prevDragRow = currDragRow;
         prevDragCol = currDragCol;
-        toggleCell(currDragRow, currDragCol, true);
+        if (isDeleting) {
+          deleteCell(currDragRow, currDragCol);
+        } else {
+          addCell(currDragRow, currDragCol);
+        }
       }
     }
   });
@@ -168,11 +187,23 @@ $(document).ready(function () {
     drawCanvas();
   });
 
-  
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "x") {
+      isDeleting = true;
+    }
+  });
+
+  document.addEventListener("keyup", function(event) {
+    if (event.key === "x") {
+      isDeleting = false;
+    }
+  });
+
+
   $("#toggleButton").on("click", toggleSimulation);
-  
+
   $("#nextButton").on("click", nextIteration);
-  
+
   $("#resetButton").on("click", function () {
     toggleSimulation();
     running = false;
@@ -189,7 +220,7 @@ $(document).ready(function () {
       interval = setInterval(nextIteration, getSpeed());
     }
   });
-  
+
   drawCanvas();
 
 });

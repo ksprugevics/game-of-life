@@ -17,6 +17,8 @@ $(document).ready(function () {
   const numCols = 80;
 
   const cells = Array.from(Array(numRows), _ => Array(numCols).fill(0));
+  let initialCellSetup;
+  let iteration = 0;
 
   canvas.style.width = numCols * cellSize + "px";
   canvas.style.height = numRows * cellSize + "px";
@@ -106,6 +108,10 @@ $(document).ready(function () {
   }
 
   function nextIteration() {
+    if (iteration == 0) {
+      initialCellSetup = cells.slice();
+    }
+
     const newCells = Array.from(Array(numRows), _ => Array(numCols).fill(0));
 
     for (let row = 0; row < numRows; row++) {
@@ -118,6 +124,7 @@ $(document).ready(function () {
         }
       }
     }
+    iteration += 1;
     cells.length = 0;
     cells.push(...newCells);
     drawCanvas();
@@ -206,6 +213,18 @@ $(document).ready(function () {
 
   $("#resetButton").on("click", function () {
     toggleSimulation();
+    iteration = 0;
+    running = false;
+    clearInterval(interval);
+    $("#toggleButton").text("Start!");
+    cells.length = 0;
+    cells.push(...initialCellSetup);
+    drawCanvas();
+  });
+
+  $("#clearButton").on("click", function () {
+    toggleSimulation();
+    iteration = 0;
     running = false;
     clearInterval(interval);
     $("#toggleButton").text("Start!");

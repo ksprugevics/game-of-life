@@ -2,6 +2,7 @@
 // Maybe add zoom levels
 // Maybe add premade structures
 // Maybe add seed support
+// fix hover
 
 $(document).ready(function () {
   const canvas = document.getElementById("myCanvas");
@@ -12,6 +13,10 @@ $(document).ready(function () {
 
   const numRows = 40;
   const numCols = 80;
+  
+  const deadColor = "#FAF1E4"
+  const aliveColor = "#435334"
+  const hoverColor = "grey"
 
   const cells = Array.from(Array(numRows), _ => Array(numCols).fill(0));
   let initialCellSetup;
@@ -47,18 +52,18 @@ $(document).ready(function () {
         const x = col * cellSize;
         const y = row * cellSize;
 
-        let cellColor = "white";
+        let cellColor = deadColor;
 
         if (cells[row][col] == 1) {
-          cellColor = "black";
+          cellColor = aliveColor;
         } else if (row === hoverRow && col === hoverCol) {
-          cellColor = "grey";
+          cellColor = hoverColor;
         }
 
         context.fillStyle = cellColor;
         context.fillRect(x, y, cellSize, cellSize);
 
-        context.strokeStyle = "black";
+        context.strokeStyle = aliveColor;
         context.strokeRect(x, y, cellSize, cellSize);
       }
     }

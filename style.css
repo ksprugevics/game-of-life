@@ -1,16 +1,15 @@
+html * {
+    color: #e0e1dd;
+    font-family: 'Roboto', cursive !important;
+}
+
 body {
     margin: 0;
     padding: 0;
     display: flex;
     flex-direction: column;
     min-height: 100vh;
-}
-
-header {
-    background-color: #333;
-    color: white;
-    padding: 1rem;
-    text-align: center;
+    background-color: #9EB384;
 }
 
 main {
@@ -27,10 +26,24 @@ canvas {
 }
 
 footer {
-    background-color: #333;
+    background-color: #435334;
     color: white;
     text-align: center;
     padding: 0.5rem;
+}
+
+button {
+    margin: 5px;
+    padding: 10px 30px 10px 30px;
+    border-radius: 25px;
+    border: none;
+    background: #3c4a2e;
+    transition: background-color 50ms ease-out 50ms;
+    font-size: 20px;
+}
+
+button:hover {
+    background: #9EB384;
 }
 
 #brushSizeContainer {
@@ -44,6 +57,33 @@ footer {
     margin: 0 20px;
 }
 
-button {
-    font-size: 24px;
+#controls {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+input[type="range"] {
+    appearance: none;
+    border-radius: 25%;
+    width: 100%;
+    height: 10px;
+    background-color: #FAF1E4;
+}
+
+input[type="range"]::-webkit-slider-thumb {
+    appearance: none;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: #9EB384;
+    cursor: pointer;
+}
+
+input[type="range"]::-moz-range-thumb {
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    background-color: #9EB384;
+    cursor: pointer;
 }

@@ -8,13 +8,14 @@
       integrity="sha256-a2yjHM4jnF9f54xUQakjZGaqYs/V1CYvWpoqZzC2/Bw="
       crossorigin="anonymous"
     ></script>
+    <link
+      href="https://fonts.googleapis.com/css2?family=Roboto&display=swap"
+      rel="stylesheet"
+    />
     <title>Game of life</title>
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
-    <header>
-      <h1>Game of life</h1>
-    </header>
     <main>
       <canvas id="myCanvas"></canvas>
     </main>
@@ -24,14 +25,21 @@
         <button id="nextButton">Next Iteration</button>
         <button id="resetButton">Reset</button>
         <button id="clearButton">Clear</button>
-        <input type="range" id="speedSlider" min="200" max="1000" value="500" />
-        <div id="brushSizeContainer">
-          <button id="brushDecrementButton">-</button>
-          <span id="brushSizeLabel">1</span>
-          <button id="brushIncrementButton">+</button>
+        <div>
+          <span>Animation Speed</span>
+          <div>
+            <input type="range" id="speedSlider" min="200" max="1000" value="500"/>
+          </div>
+        </div>
+        <div>
+          <span>Brush size</span>
+          <div id="brushSizeContainer">
+            <button id="brushDecrementButton">-</button>
+            <span id="brushSizeLabel">1</span>
+            <button id="brushIncrementButton">+</button>
+          </div>
         </div>
       </div>
-      <p>&copy; 2023 Hi.</p>
     </footer>
     <script src="script.js"></script>
   </body>

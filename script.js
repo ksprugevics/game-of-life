@@ -1,14 +1,10 @@
-// redesign UI
-// Maybe add zoom levels
-// Maybe add premade structures
-// Maybe add seed support
 // fix hover
 
 $(document).ready(function () {
   const canvas = document.getElementById("myCanvas");
   const context = canvas.getContext("2d");
 
-  const cellSize = 16;
+  const cellSize = 18;
   const scale = window.devicePixelRatio;
 
   const numRows = 40;

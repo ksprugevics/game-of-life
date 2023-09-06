@@ -16,13 +16,18 @@ main {
     flex: 1;
     display: flex;
     justify-content: center;
-    align-items: center;
+}
+
+h1 {
+    margin-top: 10px;
+    text-align: center;
+    font-size: 50px;
 }
 
 canvas {
-    border: 1px solid black;
+    border: 1px solid #435334;
     width: 90%;
-    max-height: calc(80vh - 2rem);
+    height: 100%;
 }
 
 footer {
@@ -46,11 +51,38 @@ button:hover {
     background: #9EB384;
 }
 
+#toggleButton {
+    background: #557A46;
+}
+
+#toggleButton:hover {
+    background: #7A9D54;
+}
+
+#nextButton {
+    background: #053B50;
+}
+
+#nextButton:hover {
+    background: #1d4e61;
+}
+
+#resetButton:hover, #clearButton:hover {
+    background: #C08261;
+}
+
+#resetButton, #clearButton {
+    background: #9A3B3B;
+}
+
+
 #brushSizeContainer {
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
+    margin-left: 40px;
+    margin-right: 40px;
 }
 
 #brushSizeLabel {
@@ -64,6 +96,8 @@ button:hover {
 }
 
 input[type="range"] {
+    margin-bottom: 15px;
+    margin-top: 25px;
     appearance: none;
     border-radius: 25%;
     width: 100%;

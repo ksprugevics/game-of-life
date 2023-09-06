@@ -16,27 +16,28 @@
     <link rel="stylesheet" href="style.css" />
   </head>
   <body>
+    <h1>Conway's Game of Life simulation</h1>
     <main>
       <canvas id="myCanvas"></canvas>
     </main>
     <footer>
       <div id="controls">
+        <button id="clearButton">Clear</button>
+        <button id="resetButton">Reset</button>
         <button id="toggleButton">Start!</button>
         <button id="nextButton">Next Iteration</button>
-        <button id="resetButton">Reset</button>
-        <button id="clearButton">Clear</button>
-        <div>
-          <span>Animation Speed</span>
-          <div>
-            <input type="range" id="speedSlider" min="200" max="1000" value="500"/>
-          </div>
-        </div>
         <div>
           <span>Brush size</span>
           <div id="brushSizeContainer">
             <button id="brushDecrementButton">-</button>
             <span id="brushSizeLabel">1</span>
             <button id="brushIncrementButton">+</button>
+          </div>
+        </div>
+        <div>
+          <span>Animation Speed</span>
+          <div>
+            <input type="range" id="speedSlider" min="200" max="1000" value="500"/>
           </div>
         </div>
       </div>

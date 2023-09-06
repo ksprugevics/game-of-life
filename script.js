@@ -1,4 +1,5 @@
-// fix hover
+// fix cell toggle bug
+// proper scaling
 
 $(document).ready(function () {
   const canvas = document.getElementById("myCanvas");
@@ -9,7 +10,7 @@ $(document).ready(function () {
 
   const numRows = 40;
   const numCols = 80;
-  
+
   const deadColor = "#FAF1E4"
   const aliveColor = "#435334"
   const hoverColor = "grey"
@@ -42,6 +43,19 @@ $(document).ready(function () {
 
   function drawCanvas() {
     context.clearRect(0, 0, canvas.width, canvas.height);
+    let hoverRows = []
+    let hoverCols = []
+
+    if (brushSize > 1  && hoverRow >= 0 && hoverCol >= 0) {
+      for (let i = hoverRow; i < hoverRow + brushSize; i++) {
+        for (let j = hoverCol; j < hoverCol + brushSize; j++) {
+          if (i >= 0 && i < numRows && j >= 0 && j < numCols) {
+            hoverRows.push(i);
+            hoverCols.push(j);
+          }
+        }
+      }
+    }
 
     for (let row = 0; row < numRows; row++) {
       for (let col = 0; col < numCols; col++) {
@@ -52,6 +66,14 @@ $(document).ready(function () {
 
         if (cells[row][col] == 1) {
           cellColor = aliveColor;
+        }
+
+        if (brushSize > 1) {
+          for (let i = 0; i < hoverRows.length; i++) {
+            if (hoverRows[i] == row && hoverCols[i] == col) {
+              cellColor = hoverColor;
+            }
+          }
         } else if (row === hoverRow && col === hoverCol) {
           cellColor = hoverColor;
         }
@@ -63,6 +85,8 @@ $(document).ready(function () {
         context.strokeRect(x, y, cellSize, cellSize);
       }
     }
+
+
   }
 
   function toggleCell(row, col) {
@@ -181,10 +205,10 @@ $(document).ready(function () {
   });
 
   canvas.addEventListener("mousemove", function (event) {
+    const rect = canvas.getBoundingClientRect();
+    const mouseX = event.clientX - rect.left;
+    const mouseY = event.clientY - rect.top;
     if (isDragging) {
-      const rect = canvas.getBoundingClientRect();
-      const mouseX = event.clientX - rect.left;
-      const mouseY = event.clientY - rect.top;
 
       const currDragCol = Math.floor(mouseX / cellSize);
       const currDragRow = Math.floor(mouseY / cellSize);
@@ -207,6 +231,9 @@ $(document).ready(function () {
         }
       }
     }
+    hoverCol = Math.floor(mouseX / cellSize);
+    hoverRow = Math.floor(mouseY / cellSize);
+    drawCanvas();
   });
 
   canvas.addEventListener("mouseup", function () {
@@ -220,7 +247,6 @@ $(document).ready(function () {
   canvas.addEventListener("mouseout", function () {
     hoverRow = -1;
     hoverCol = -1;
-
     drawCanvas();
   });
 

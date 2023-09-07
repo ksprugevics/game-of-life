@@ -1,5 +1,3 @@
-// proper scaling
-
 $(document).ready(function () {
   const canvas = document.getElementById("myCanvas");
   const context = canvas.getContext("2d");
@@ -7,8 +5,8 @@ $(document).ready(function () {
   const cellSize = 18;
   const scale = window.devicePixelRatio;
 
-  const numRows = 40;
-  const numCols = 80;
+  const numRows = parseInt(window.innerHeight / cellSize - 15);
+  const numCols = parseInt(window.innerWidth / cellSize - 10);
 
   const deadColor = "#FAF1E4"
   const aliveColor = "#435334"
@@ -225,8 +223,8 @@ $(document).ready(function () {
   });
 
   canvas.addEventListener("mouseout", function () {
-    hoverRow = -1;
-    hoverCol = -1;
+    hoverOriginRow = -1;
+    hoverOriginCol = -1;
     drawCanvas();
   });
 

@@ -1,4 +1,3 @@
-// fix cell toggle bug
 // proper scaling
 
 $(document).ready(function () {
@@ -27,8 +26,11 @@ $(document).ready(function () {
 
   context.scale(scale, scale);
 
-  let hoverRow = -1;
-  let hoverCol = -1;
+  let hoverOriginRow = -1;
+  let hoverOriginCol = -1;
+  let hoverRows = []
+  let hoverCols = []
+  
   const maxSpeed = 1000;
   let brushSize = 1;
 
@@ -43,20 +45,7 @@ $(document).ready(function () {
 
   function drawCanvas() {
     context.clearRect(0, 0, canvas.width, canvas.height);
-    let hoverRows = []
-    let hoverCols = []
-
-    if (brushSize > 1  && hoverRow >= 0 && hoverCol >= 0) {
-      for (let i = hoverRow; i < hoverRow + brushSize; i++) {
-        for (let j = hoverCol; j < hoverCol + brushSize; j++) {
-          if (i >= 0 && i < numRows && j >= 0 && j < numCols) {
-            hoverRows.push(i);
-            hoverCols.push(j);
-          }
-        }
-      }
-    }
-
+    calculateHoverCells()
     for (let row = 0; row < numRows; row++) {
       for (let col = 0; col < numCols; col++) {
         const x = col * cellSize;
@@ -74,7 +63,7 @@ $(document).ready(function () {
               cellColor = hoverColor;
             }
           }
-        } else if (row === hoverRow && col === hoverCol) {
+        } else if (row === hoverOriginRow && col === hoverOriginCol) {
           cellColor = hoverColor;
         }
 
@@ -85,29 +74,20 @@ $(document).ready(function () {
         context.strokeRect(x, y, cellSize, cellSize);
       }
     }
-
-
   }
 
-  function toggleCell(row, col) {
-    if (row >= 0 && row < numRows && col >= 0 && col < numCols) {
-      cells[row][col] = cells[row][col] === 0 ? 1 : 0;
-      drawCanvas();
-    }
-  }
-
-  function deleteCell(row, col) {
-    if (row >= 0 && row < numRows && col >= 0 && col < numCols) {
-      cells[row][col] = 0;
-      drawCanvas();
-    }
-  }
-
-  function addCell(row, col) {
-    drawCanvas();
-    if (row >= 0 && row < numRows && col >= 0 && col < numCols) {
-      cells[row][col] = 1;
-      drawCanvas();
+  function calculateHoverCells() {
+    hoverRows = []
+    hoverCols = []
+    if (brushSize > 1  && hoverOriginRow >= 0 && hoverOriginCol >= 0) {
+      for (let i = hoverOriginRow; i < hoverOriginRow + brushSize; i++) {
+        for (let j = hoverOriginCol; j < hoverOriginCol + brushSize; j++) {
+          if (i >= 0 && i < numRows && j >= 0 && j < numCols) {
+            hoverRows.push(i);
+            hoverCols.push(j);
+          }
+        }
+      }
     }
   }
 
@@ -133,24 +113,15 @@ $(document).ready(function () {
     drawCanvas();
   }
 
-
-  function countLiveNeighbours(row, col) {
-    let liveNeighbors = 0;
-
-    // Define the relative positions of neighbors (including diagonals)
-    const neighborsOffsets = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
-
-    for (const offset of neighborsOffsets) {
-      const newRow = row + offset[0];
-      const newCol = col + offset[1];
-
-      // Check if the new position is within bounds
-      if (newRow >= 0 && newRow < numRows && newCol >= 0 && newCol < numCols) {
-        liveNeighbors += cells[newRow][newCol];
+  function brushedToggleCell(row, col) {
+    for (let i = row; i < row + brushSize; i++) {
+      for (let j = col; j < col + brushSize; j++) {
+        if (i >= 0 && i < numRows && j >= 0 && j < numCols) {
+          cells[i][j] = cells[i][j] === 0 ? 1 : 0;
+        }
       }
     }
-
-    return liveNeighbors;
+    drawCanvas();
   }
 
   function nextIteration() {
@@ -174,6 +145,23 @@ $(document).ready(function () {
     cells.length = 0;
     cells.push(...newCells);
     drawCanvas();
+  }
+  
+  function countLiveNeighbours(row, col) {
+    let liveNeighbors = 0;
+
+    const neighborsOffsets = [[-1, -1], [-1, 0], [-1, 1], [0, -1], [0, 1], [1, -1], [1, 0], [1, 1]];
+
+    for (const offset of neighborsOffsets) {
+      const newRow = row + offset[0];
+      const newCol = col + offset[1];
+
+      if (newRow >= 0 && newRow < numRows && newCol >= 0 && newCol < numCols) {
+        liveNeighbors += cells[newRow][newCol];
+      }
+    }
+
+    return liveNeighbors;
   }
 
   function getSpeed() {
@@ -201,7 +189,7 @@ $(document).ready(function () {
     const clickedCol = Math.floor(mouseX / cellSize);
     const clickedRow = Math.floor(mouseY / cellSize);
 
-    toggleCell(clickedRow, clickedCol);
+    brushedToggleCell(clickedRow, clickedCol);
   });
 
   canvas.addEventListener("mousemove", function (event) {
@@ -217,22 +205,14 @@ $(document).ready(function () {
         prevDragRow = currDragRow;
         prevDragCol = currDragCol;
         if (isDeleting) {
-          if (brushSize > 1) {
             brushedDeleteCell(currDragRow, currDragCol);
-          } else {
-            deleteCell(currDragRow, currDragCol);
-          }
         } else {
-          if (brushSize > 1) {
             brushedAddCell(currDragRow, currDragCol);
-          } else {
-            addCell(currDragRow, currDragCol);
-          }
         }
       }
     }
-    hoverCol = Math.floor(mouseX / cellSize);
-    hoverRow = Math.floor(mouseY / cellSize);
+    hoverOriginCol = Math.floor(mouseX / cellSize);
+    hoverOriginRow = Math.floor(mouseY / cellSize);
     drawCanvas();
   });
 
